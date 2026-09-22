@@ -1,7 +1,18 @@
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import CharacterList from './pages/CharacterList';
+import CharacterDetail from './pages/CharacterDetail';
+import Favorites from './pages/Favorites';
+
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-      <h1 className="text-3xl font-bold">Rick and Morty Explorer 🛸</h1>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<CharacterList />} />
+        <Route path="/personaje/:id" element={<CharacterDetail />} />
+        <Route path="/favoritos" element={<Favorites />} />
+      </Routes>
     </div>
   );
 }

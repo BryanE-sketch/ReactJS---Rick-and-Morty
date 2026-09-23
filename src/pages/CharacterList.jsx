@@ -4,6 +4,8 @@ import CharacterCard from '../components/CharacterCard';
 import SearchBar from '../components/SearchBar';
 import Pagination from '../components/Pagination';
 import useDebounce from '../hooks/useDebounce';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
 
 function CharacterList() {
   const [personajes, setPersonajes] = useState([]);
@@ -65,19 +67,9 @@ function CharacterList() {
         onEstadoChange={setEstado}
       />
 
-      {cargando && <p>Cargando personajes...</p>}
-
-      {error && (
-        <div className="text-red-500">
-          <p>Error: {error}</p>
-          <button
-            onClick={() => setIntento((n) => n + 1)}
-            className="mt-2 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-          >
-            Reintentar
-          </button>
-        </div>
-      )}
+      {cargando && <LoadingSpinner mensaje="Cargando personajes..." />}
+      {error && <ErrorMessage mensaje={error} onReintentar={() => setIntento((n) => n + 1)} />}
+      
 
       {!cargando && !error && personajes.length === 0 && (
         <p className="text-gray-400">No se encontraron personajes con esos criterios.</p>

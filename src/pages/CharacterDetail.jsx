@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { getCharacterById, getEpisodesByUrls } from '../services/api';
 import { useFavorites } from '../context/FavoritesContext';
 import FavoriteButton from '../components/FavoriteButton';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
 
 const colorPorEstado = {
   Alive: 'bg-green-500',
@@ -18,6 +20,7 @@ function CharacterDetail() {
   const [episodios, setEpisodios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+  const [intento, setIntento] = useState(0);
 
   useEffect(() => {
     async function cargarDetalle() {
@@ -25,7 +28,7 @@ function CharacterDetail() {
         setCargando(true);
         setError(null);
 
-        const datosPersonaje = await getCharacterById(id);
+        const datosPersonaje = await getCharacterById(id, intento);
         setPersonaje(datosPersonaje);
 
         const datosEpisodios = await getEpisodesByUrls(datosPersonaje.episode);
@@ -40,9 +43,11 @@ function CharacterDetail() {
     cargarDetalle();
   }, [id]);
 
-  if (cargando) return <p className="p-6">Cargando personaje...</p>;
-  if (error) return <p className="p-6 text-red-500">Error: {error}</p>;
-  if (!personaje) return null;
+    if (cargando) return <LoadingSpinner mensaje="Cargando personaje..." />;
+    if (error) 
+      return (
+      <ErrorMessage mensaje={error} onReintentar={() => setIntento((n) => n + 1)} />);
+    if (!personaje) return null;
 
   const colorEstado = colorPorEstado[personaje.status] || colorPorEstado.unknown;
   const favorito = esFavorito(personaje.id);

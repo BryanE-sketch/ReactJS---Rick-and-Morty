@@ -1,11 +1,11 @@
 const BASE_URL = 'https://rickandmortyapi.com/api';
 
-export async function getCharacters({ page = 1, name = '', status = '' } = {}) {
+export async function getCharacters({ page = 1, name = '', status = '', signal } = {}) {
   const params = new URLSearchParams({ page });
   if (name) params.append('name', name);
   if (status) params.append('status', status);
 
-  const respuesta = await fetch(`${BASE_URL}/character?${params.toString()}`);
+  const respuesta = await fetch(`${BASE_URL}/character?${params.toString()}`, { signal });
 
   if (respuesta.status === 404) {
     return { results: [] };

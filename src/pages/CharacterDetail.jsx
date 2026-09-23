@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getCharacterById, getEpisodesByUrls } from '../services/api';
+import { useFavorites } from '../context/FavoritesContext';
+import FavoriteButton from '../components/FavoriteButton';
 
 const colorPorEstado = {
   Alive: 'bg-green-500',
@@ -10,6 +12,7 @@ const colorPorEstado = {
 
 function CharacterDetail() {
   const { id } = useParams();
+  const { esFavorito, toggleFavorito } = useFavorites();
 
   const [personaje, setPersonaje] = useState(null);
   const [episodios, setEpisodios] = useState([]);
@@ -42,6 +45,7 @@ function CharacterDetail() {
   if (!personaje) return null;
 
   const colorEstado = colorPorEstado[personaje.status] || colorPorEstado.unknown;
+  const favorito = esFavorito(personaje.id);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -56,17 +60,30 @@ function CharacterDetail() {
           className="w-full sm:w-64 rounded-lg"
         />
 
-        <div>
-          <h1 className="text-3xl font-bold">{personaje.name}</h1>
+      <div>
+      <div className="flex items-center gap-3">
+        <h1 className="text-3xl font-bold">{personaje.name}</h1>
+        <FavoriteButton
+            favorito={favorito}
+            onClick={() =>
+            toggleFavorito({
+            id: personaje.id,
+            name: personaje.name,
+            image: personaje.image,
+            status: personaje.status,
+            species: personaje.species,
+          })
+       }/>
+      </div>
 
-          <div className="flex items-center gap-2 mt-2">
+      <div className="flex items-center gap-2 mt-2">
             <span className={`w-3 h-3 rounded-full ${colorEstado}`}></span>
             <span>
               {personaje.status} - {personaje.species}
             </span>
           </div>
 
-          <div className="mt-4 space-y-1 text-gray-300">
+      <div className="mt-4 space-y-1 text-gray-300">
             <p>
               <span className="font-bold text-white">Género:</span> {personaje.gender}
             </p>

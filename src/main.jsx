@@ -7,7 +7,7 @@ import { FavoritesProvider } from './context/FavoritesContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/ReactJS---Rick-and-Morty/">
       <FavoritesProvider>
         <App />
       </FavoritesProvider>

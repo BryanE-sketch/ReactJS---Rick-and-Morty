@@ -7,6 +7,10 @@ export async function getCharacters({ page = 1, name = '', status = '' } = {}) {
 
   const respuesta = await fetch(`${BASE_URL}/character?${params.toString()}`);
 
+  if (respuesta.status === 404) {
+    return { results: [] };
+  }
+
   if (!respuesta.ok) {
     throw new Error('No se pudieron obtener los personajes.');
   }
